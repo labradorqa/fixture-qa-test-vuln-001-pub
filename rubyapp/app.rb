@@ -1,25 +1,26 @@
-# rubyapp/app.rb — Sinatra 진입점. params(원격 소스)를 취약 sink로 연결 → CodeQL taint flow 발동.
-require 'sinatra'
-require 'nokogiri' # nokogiri 1.10.4
+# rubyapp/app.rb — Rails 컨트롤러 패턴. CodeQL ruby가 ActionController params 를 원격 소스로 인식.
+require 'nokogiri'
 
 SECRET_KEY = 'super-secret-rails-key'.freeze # CWE-798
 
-# CWE-95: eval 인젝션
-get '/eval' do
-  eval(params[:expr])
-end
+class VulnController < ActionController::Base
+  # CWE-95: eval 인젝션
+  def run_eval
+    eval(params[:expr])
+  end
 
-# CWE-78: command injection
-get '/backup' do
-  system("tar czf /tmp/#{params[:name]}.tgz /data")
-end
+  # CWE-78: command injection (문자열 보간)
+  def backup
+    system("tar czf /tmp/#{params[:name]}.tgz /data")
+  end
 
-# CWE-502: 신뢰 불가 데이터 Marshal.load
-post '/load' do
-  Marshal.load(request.body.read)
-end
+  # CWE-502: 신뢰 불가 데이터 Marshal.load
+  def load_session
+    Marshal.load(params[:blob])
+  end
 
-# CWE-611: Nokogiri NOENT → XXE
-post '/xml' do
-  Nokogiri::XML(request.body.read) { |c| c.noblanks.noent.dtdload }.to_s
+  # CWE-611: Nokogiri NOENT → XXE
+  def parse_xml
+    Nokogiri::XML(params[:xml]) { |c| c.noblanks.noent.dtdload }.to_s
+  end
 end
