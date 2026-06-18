@@ -79,3 +79,6 @@ Rails 5.2.0, Nokogiri 1.10.4, devise 4.5.0, rack 2.0.5, rubyzip 1.2.1 (Zip Slip)
 ## 사용
 
 이 코드는 `~/Desktop/work/test_repo/samsungfire-qa-test-vuln-001(-pub)`에 복사되어 사용. 갱신이 필요하면 해당 로컬 폴더에서 직접 복사·commit·push.
+
+## Multi-language reachability
+Python(pyapp/)/Java(javaapp/)/Ruby(rubyapp/) 소스 추가 — 취약 컴포넌트가 파일·함수에서 실제 호출(reachability) + 함수 단위 SAST.
