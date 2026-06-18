@@ -22,7 +22,7 @@ jobs:
           - language: ruby
             build-mode: none
           - language: java-kotlin
-            build-mode: none
+            build-mode: autobuild
     steps:
       - uses: actions/checkout@v4
       - name: Initialize CodeQL
